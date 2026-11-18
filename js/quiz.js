@@ -40,7 +40,7 @@
   };
   var VISTO_NOTE = 'Você não precisa de visto americano nem de green card para comprar. O visto só influencia as condições de financiamento, e o especialista explica o que se aplica ao seu caso.';
 
-  var step = 0, answers = [], submitted = false;
+  var step = 0, answers = [], submitted = false, autoTimer = null;
   var $ = function (id) { return document.getElementById(id); };
 
   function temperature() {
@@ -86,7 +86,7 @@
   function message(lead) {
     var l = ['Olá! Fiz o quiz de perfil da Realize e quero marcar a minha consultoria estratégica sem custos.', ''];
     rows().forEach(function (r) { l.push('• ' + r.k + ': ' + r.v); });
-    l.push('• Melhor horário: ' + lead.horario, '', 'Nome: ' + lead.nome, 'Estratégia indicada: ' + RESULTS[answers[0]]);
+    l.push('• Melhor horário: ' + lead.horario, '', 'Nome: ' + lead.nome, 'E-mail: ' + lead.email, 'Estratégia indicada: ' + RESULTS[answers[0]]);
     var q = new URLSearchParams(location.search), o = [];
     ['utm_source', 'utm_campaign', 'utm_content'].forEach(function (k) { if (q.get(k)) o.push(q.get(k)); });
     l.push('', '[Ref: Quiz Consultoria Estratégica Flórida' + (o.length ? ' | origem: ' + o.join(' / ') : '') + ']');
@@ -117,6 +117,29 @@
       ag.classList.add('hidden');
       wa.classList.remove('sec');
       wa.textContent = 'Marcar minha consultoria no WhatsApp';
+
+      // Abre o WhatsApp sozinho, com as respostas já escritas (4 segundos, dá para cancelar)
+      clearInterval(autoTimer);
+      var left = 4, note = $('r-note');
+      note.innerHTML = '';
+      var txt = document.createElement('span');
+      var cancel = document.createElement('button');
+      cancel.type = 'button'; cancel.className = 'back'; cancel.textContent = 'Cancelar';
+      cancel.style.cssText = 'display:inline;margin:0 0 0 8px;padding:0;text-decoration:underline';
+      function paint() { txt.textContent = 'Abrindo o WhatsApp em ' + left + 's, com as suas respostas já escritas. '; }
+      paint(); note.appendChild(txt); note.appendChild(cancel);
+      autoTimer = setInterval(function () {
+        left--;
+        if (left <= 0) {
+          clearInterval(autoTimer);
+          track('Contact', { content_name: 'quiz_whatsapp_auto' });
+          window.location.href = wa.href;
+        } else { paint(); }
+      }, 1000);
+      cancel.onclick = function () {
+        clearInterval(autoTimer);
+        note.textContent = 'Tudo bem. Quando quiser, toque no botão acima para enviar as suas respostas pelo WhatsApp.';
+      };
     }
 
     if (submitted) return;
@@ -141,6 +164,6 @@
 
   $('back').onclick = function () { step = Math.max(0, step - 1); render(); };
   $('finish').onclick = function () { if (validate()) { step = N + 1; render(); window.scrollTo(0, 0); } };
-  $('restart').onclick = function () { step = 0; answers = []; submitted = false; render(); };
+  $('restart').onclick = function () { clearInterval(autoTimer); step = 0; answers = []; submitted = false; render(); };
   render();
 })();
