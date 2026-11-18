@@ -89,7 +89,7 @@
     l.push('• Melhor horário: ' + lead.horario, '', 'Nome: ' + lead.nome, 'E-mail: ' + lead.email, 'Estratégia indicada: ' + RESULTS[answers[0]]);
     var q = new URLSearchParams(location.search), o = [];
     ['utm_source', 'utm_campaign', 'utm_content'].forEach(function (k) { if (q.get(k)) o.push(q.get(k)); });
-    l.push('', '[Ref: Quiz Consultoria Estratégica Flórida' + (o.length ? ' | origem: ' + o.join(' / ') : '') + ']');
+    l.push('', '[QUIZ' + (o.length ? ' | ' + o.join(' / ') : '') + ']');
     return l.join('\n');
   }
 

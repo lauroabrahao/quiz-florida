@@ -28,9 +28,8 @@
     return 'https://wa.me/' + n + (text ? '?text=' + encodeURIComponent(text) : '');
   };
 
-  // Mensagem do WhatsApp: deixa claro que é a consultoria e de qual página/botão veio
-  var REF = document.body.getAttribute('data-ref') || 'LP Consultoria Estratégica Flórida';
-  var ORIG = document.body.getAttribute('data-origem') === 'quiz' ? 'Vim pelo quiz de perfil da Realize' : 'Vim pela página da Realize (vídeo da Mara)';
+  // Mensagem do WhatsApp: simples, só com a referência de onde veio (LP ou QUIZ)
+  var REF = document.body.getAttribute('data-ref') || 'LP';
   function origem() {
     var q = new URLSearchParams(location.search), o = [];
     if (q.get('utm_source')) o.push(q.get('utm_source'));
@@ -38,10 +37,10 @@
     if (q.get('utm_content')) o.push(q.get('utm_content'));
     return o.join(' / ');
   }
-  function mensagem(motivo, local) {
-    var m = 'Olá! ' + ORIG + ' e quero agendar a minha consultoria estratégica sem custos para analisar o meu caso na Flórida.';
+  function mensagem(motivo) {
+    var m = 'Olá! Quero agendar a minha consultoria estratégica sem custos.';
     if (motivo) m += ' Meu principal motivo: ' + motivo + '.';
-    m += '\n\n[Ref: ' + REF + (local ? ' | botão: ' + local : '') + (origem() ? ' | origem: ' + origem() : '') + ']';
+    m += '\n\n[' + REF + (origem() ? ' | ' + origem() : '') + ']';
     return m;
   }
   window.waMensagem = mensagem;
