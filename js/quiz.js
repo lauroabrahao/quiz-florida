@@ -129,10 +129,12 @@
         visto: QS[VISTO].opts[answers[VISTO]],
         respostas: rows(), estrategia: RESULTS[answers[0]],
         utm: Object.fromEntries(new URLSearchParams(location.search)),
-        criado_em: new Date().toISOString()
+        criado_em: new Date().toISOString(),
+        pagina: location.href
       };
       try {
-        fetch(C.CRM_WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(function () {});
+        // Envio "simples" (sem preflight), aceito pelo Google Apps Script. A resposta não é lida; o lead chega mesmo se a pessoa fechar a página.
+        fetch(C.CRM_WEBHOOK, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload), keepalive: true }).catch(function () {});
       } catch (e) {}
     }
   }
