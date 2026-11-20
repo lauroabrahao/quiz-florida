@@ -31,3 +31,11 @@ Observações:
 - O envio usa `mode: no-cors` e texto simples, que é o formato que o Apps Script aceita no navegador. Por isso o quiz não lê a resposta; o lead chega mesmo se a pessoa fechar a página.
 - Se mudar o código do Apps Script, é preciso criar uma **nova versão** da implantação (Implantar > Gerenciar implantações > Editar > Nova versão); o URL continua o mesmo.
 - Enviar mensagem automática no WhatsApp do lead ou do time exige a API oficial do WhatsApp (ou serviços como Z-API e Evolution), que é paga e precisa de aprovação. O e-mail e a planilha cobrem o recebimento sem isso.
+
+## Estado atual (20/11/2026)
+
+- No ar em https://quiz.realizehome.com.br (GitHub Pages deste repositório, `lauroabrahao/quiz-florida`). O arquivo `CNAME` contém o subdomínio; não apagar. DNS: CNAME `quiz` na Hostinger apontando para `lauroabrahao.github.io`. Mais detalhes da infraestrutura no `CLAUDE.md` do repositório `funil-florida`.
+- Ao concluir, o quiz abre o WhatsApp sozinho depois de 4 segundos (dá para cancelar), com as respostas, o nome e o e-mail na mensagem e a referência `[QUIZ]`.
+- **Ainda sem destino para os leads:** `CRM_WEBHOOK` está vazio. O receptor em `apps-script/Codigo.gs` não foi instalado porque a conta do Google da Lauro está sem armazenamento (não cria planilha nem recebe e-mail). Alternativas: Chatwoot, Supabase, outra conta do Google ou n8n/Make.
+- **Falta alinhar à página principal:** aviso de envio de dados com Política de Privacidade clicável, política de privacidade completa (LGPD), banner de cookies com "Aceitar todos / Rejeitar não essenciais / Gerenciar preferências" e Pixel só depois da autorização. Hoje o quiz ainda usa o banner e a política da versão anterior.
+- Para trabalhar: `git pull`, editar, `git add -A`, `git commit`, `git push`. O GitHub às vezes cria commits sozinho no `CNAME`; se o push for recusado, `git pull --rebase origin main`.
